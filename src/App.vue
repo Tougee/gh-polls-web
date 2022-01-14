@@ -6,16 +6,18 @@
 
     <div class="main-content">
       <div v-if="generated">
-        <ui-panel title="Generated Poll">
+        <ui-panel title="Generated Poll" >
           <copy-button slot="action" :text="preview" entity="HTML"></copy-button>
-          <copy-button slot="action" :text="markdown" preset="primary" entity="Markdown"></copy-button>
+          <copy-button slot="action" :text="pollurl" preset="primary" entity="to Mixin"></copy-button>
+
+          <h4 v-if="question" slot="question">{{ question }}</h4>
 
           <div slot="body" class="preview-box" v-html="preview"></div>
         </ui-panel>
       </div>
 
       <div v-else>
-        <ui-panel title="Poll Options">
+        <ui-panel title="New poll">
           <ui-button slot="action" type="button"
             @click="generate"
             :disabled="loading"
@@ -25,7 +27,19 @@
             <span v-else>Generate</span>
           </ui-button>
 
+          <div slot="question">
+             <h4 >Question</h4>
+            <ui-input 
+            class="question-input"
+              @change="changeQuestion"
+              type="text"
+            placeholder="Ask a question (Optional)">
+            </ui-input>
+          </div>  
+
           <div slot="body">
+            <h4 class="options-title">Options</h4>
+
             <draggable v-model="options" :options="{ group: 'options', handle: '.handle' }" class="inner">
               <poll-option v-for="(option, index) in options"
                 :key="option.id"
@@ -44,8 +58,6 @@
             </ui-button>
           </div>
         </ui-panel>
-
-        <tip></tip>
       </div>
     </div>
   </ui-container>
@@ -61,6 +73,7 @@ import UiContainer from './components/UiContainer'
 import UiPanel from './components/UiPanel'
 import UiButton from './components/UiButton'
 import UiAlert from './components/UiAlert'
+import UiInput from './components/UiInput'
 import UiLoader from './components/UiLoader'
 import UiTitleHeading from './components/UiTitleHeading'
 import Tip from './components/Tip'
@@ -71,6 +84,7 @@ export default {
   name: 'app',
   data() {
     return {
+      question: '',
       options: [{ text: '', id: 0 }],
       loading: false,
       generated: false,
@@ -99,6 +113,10 @@ export default {
       this.options[index].text = value
     },
 
+    changeQuestion(evt) {
+      this.question = evt.target.value
+    },
+
     rm(i) {
       if (this.options.length > 1){
         this.options.splice(i, 1)
@@ -119,15 +137,22 @@ export default {
       this.errors = {};
       this.loading = true
 
-      return axios.post('/poll', { options: this.options.map(o => o.text) })
+      return axios.post('/poll', { 
+        question: this.question,
+        options: this.options.map(o => o.text) 
+      })
         .then(res => {
-          this.$refs.alert.notify('success', 'You may now copy the generated poll to GitHub or any markdown editor.');
+          this.$refs.alert.notify('success', 'You may now copy the generated poll to Mixin.');
           this.loading = false
           this.generated = true
           this.id = res.data.id
         }, err => {
           this.$refs.alert.notify('error', 'An error occured trying to generate a poll.');
           this.loading = false
+
+          if (err.response.status === 401) {
+            window.location.href = err.response.data
+          }
         });
     }
   },
@@ -140,9 +165,13 @@ export default {
       }).join('\n')
     },
 
+    pollurl() {
+      return `${config.api}/poll/${this.id}`
+    },
+
     preview() {
       return marked(this.markdown);
-    }
+    },
   },
   components: {
     CopyButton,
@@ -151,6 +180,7 @@ export default {
     Tip,
     UiContainer,
     UiAlert,
+    UiInput,
     UiPanel,
     UiButton,
     UiLoader,
@@ -202,6 +232,14 @@ html, body {
 
 .main-content {
   margin-bottom: 160px;
+}
+
+.options-title {
+  margin-top: 0;
+}
+
+.question-input {
+  margin-bottom: 16px;
 }
 
 /**

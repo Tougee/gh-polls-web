@@ -1,7 +1,7 @@
 {
-  "name": "gh-polls-web",
+  "name": "mixin-polls-web",
   "version": "1.0.0",
-  "description": "A web front-end for tj/gh-polls",
+  "description": "A web front-end for mixin-polls",
   "author": "Kier Borromeo <seraphipod@gmail.com>",
   "private": true,
   "scripts": {

@@ -8,6 +8,10 @@
       </div>
     </header>
 
+    <div class="question">
+      <slot name="question"></slot>
+    </div>
+
     <div class="body">
       <slot name="body"></slot>
     </div>
@@ -17,16 +21,23 @@
 <script>
   export default {
     name: 'ui-panel',
-    props: ['title']
+    props: ['title'],
   }
 </script>
 
 <style scoped>
   .panel > .heading,
+  .panel > .question,
   .panel > .body {
     padding: 16px;
     background: var(--color-white);
     border: 1px solid var(--color-silver);
+  }
+
+  .panel > .question {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-bottom: 0;
   }
 
   .panel > .heading {

@@ -1,3 +1,3 @@
 export default {
-  api: 'https://api.gh-polls.com'
+  api: 'https://mixinpoll.touge.fun',
 }

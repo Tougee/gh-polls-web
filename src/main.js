@@ -12,6 +12,7 @@ Vue.component('icon', Icon);
 import axios from 'axios';
 import config from './config';
 axios.defaults.baseURL = config.api;
+axios.defaults.withCredentials = true;
 
 Vue.config.productionTip = false
 
