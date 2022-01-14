@@ -6,7 +6,7 @@
       </div>
 
       <p class="text">
-        Pressing <code>tab</code> while focused on the last input will allow you to immediately add another option.
+        Don't forget to copy the generated poll link to Mixin.
         <button type="button" class="hide" @click="close">Close This Tip</button>
       </p>
     </div>

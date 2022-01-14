@@ -58,6 +58,8 @@
             </ui-button>
           </div>
         </ui-panel>
+
+        <tip></tip>
       </div>
     </div>
   </ui-container>
