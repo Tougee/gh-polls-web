@@ -2,9 +2,9 @@
   <header class="title-heading">
     <h1 class="title">Mixin Polls</h1>
     <nav class="nav">
-      <a href="https://github.com/tougee/gh-polls-web" class="link" target="_blank" title="GitHub">
+      <!-- <a href="https://github.com/tougee/gh-polls-web" class="link" target="_blank" title="GitHub">
         <icon name="github-alt"></icon>
-      </a>
+      </a> -->
     </nav>
   </header>
 </template>

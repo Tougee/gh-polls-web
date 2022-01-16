@@ -158,6 +158,15 @@ export default {
         });
     }
   },
+  mounted() {
+    axios.get('/me').then(res => {
+      console.log(res.data)
+    },err => {
+      if (err.response.status === 401) {
+            window.location.href = err.response.data
+      }
+    });
+  },
   computed: {
     markdown() {
       return this.options.map(option => {
