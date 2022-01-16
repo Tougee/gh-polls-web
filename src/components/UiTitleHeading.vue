@@ -2,9 +2,10 @@
   <header class="title-heading">
     <h1 class="title">Mixin Polls</h1>
     <nav class="nav">
-      <!-- <a href="https://github.com/tougee/gh-polls-web" class="link" target="_blank" title="GitHub">
-        <icon name="github-alt"></icon>
-      </a> -->
+      <div class="avatar-cropper">
+        <img v-if="avatar" class="avatar" :src=avatar>
+        <icon v-else name="user-circle"></icon>
+      </div>
     </nav>
   </header>
 </template>
@@ -34,7 +35,7 @@
 
   .title-heading > .nav {
     display: flex;
-    margin-right: 120px;
+    margin-right: 100px;
     align-items: center;
   }
 
@@ -55,15 +56,18 @@
   }
 
   .avatar-cropper {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
   }
 
   .avatar {
-    display: inline;
+    display: block;
     height: 100%;
     width: 100%;
   }

@@ -1,6 +1,6 @@
 <template>
   <ui-container>
-    <ui-title-heading></ui-title-heading>
+    <ui-title-heading :avatar="avatar_url"></ui-title-heading>
 
     <ui-alert ref="alert"></ui-alert>
 
@@ -93,6 +93,7 @@ export default {
       errors: {},
       counter: 0,
       id: '',
+      avatar_url: '',
     }
   },
   methods: {
@@ -160,7 +161,8 @@ export default {
   },
   mounted() {
     axios.get('/me').then(res => {
-      console.log(res.data)
+      this.avatar_url = res.data.avatar_url
+      console.log(this.avatar_url)
     },err => {
       if (err.response.status === 401) {
             window.location.href = err.response.data
