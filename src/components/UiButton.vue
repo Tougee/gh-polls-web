@@ -34,6 +34,7 @@
     cursor: pointer;
     transform: translateY(0);
     transition: 200ms cubic-bezier(.06,.67,.37,.99) all;
+    min-width: 60px;
   }
 
   .button.-primary {
