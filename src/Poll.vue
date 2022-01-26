@@ -18,6 +18,7 @@
                 alt=""
                 @click="vote(o.text)"
                 :id="o.text"
+                class="option-img"
               />
             </div>
           </div>
@@ -65,9 +66,11 @@ export default {
           if (res.data && res.data.error && res.data.error == 10000) {
             this.$refs.alert.notify("error", i18n.t("message.alreadyVote"));
           } else {
-            var img = document.getElementById(option);
-            if (img) {
-              img.src = `${config.api}/poll/${this.id}/${option}?${Date.now()}`;
+            var imgs = document.getElementsByClassName("option-img");
+            if (imgs) {
+              Array.from(imgs).map((img) => {
+                img.src = `${config.api}/poll/${this.id}/${img.id}?${Date.now()}`;
+              })
               this.$refs.alert.notify("success", i18n.t("message.voteSuccess"));
             } else {
               this.$refs.alert.notify(
