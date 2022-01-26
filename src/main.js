@@ -24,7 +24,7 @@ const app = new Vue({
     currentRoute: window.location.pathname
   },
   computed: {
-    ViewComponent () {
+    ViewComponent() {
       if (this.currentRoute.startsWith('/poll')) {
         return require('./Poll.vue')
       } else {
@@ -32,7 +32,7 @@ const app = new Vue({
       }
     }
   },
-  render (h) {
+  render(h) {
     return h(this.ViewComponent)
   }
 })
