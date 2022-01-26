@@ -6,6 +6,7 @@ import 'normalize.css';
 import Icon from 'vue-awesome';
 import 'vue-awesome/icons/remove'
 import 'vue-awesome/icons/ellipsis-v'
+import i18n from './i18n'
 Vue.component('icon', Icon);
 
 import axios from 'axios';
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 const app = new Vue({
+  i18n,
   el: '#app',
   data: {
     currentRoute: window.location.pathname

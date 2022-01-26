@@ -12,7 +12,7 @@
       :value="option.text"
       :class="{ 'form-input': true, '-danger': error }"
       type="text"
-      placeholder="Enter an option (e.g., BTC, XIN, ETH, etc.)"
+      :placeholder="$t('message.enterOptions')"
       ref="input">
     </ui-input>
 

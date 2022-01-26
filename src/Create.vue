@@ -5,27 +5,27 @@
     <ui-alert ref="alert"></ui-alert>
 
     <div class="main-content">
-        <ui-panel title="New poll">
+        <ui-panel :title="$t('message.newPoll')">
           <ui-button slot="action" type="button"
             @click="generate"
             :disabled="loading"
             preset="primary"
             title="Generate the poll">
             <ui-loader v-if="loading"></ui-loader>
-            <span v-else>Generate</span>
+            <span v-else>{{ $t('message.generate') }}</span>
           </ui-button>
 
           <div slot="body">
-              <h4 >Question</h4>
+              <h4 >{{ $t('message.question')}}</h4>
               <ui-input 
               class="question-input"
                 @change="changeQuestion"
                 type="text"
-              placeholder="Ask a question (Optional)">
+              :placeholder="$t('message.askQuestion')">
               </ui-input>
 
             <div class="options-title">
-              <h4>Options<span v-if="isMulti"> (Multiple)</span></h4>
+              <h4>{{$t('message.options')}}<span v-if="isMulti"> ({{$t('message.multiple')}})</span></h4>
               <toggle-button 
                 :value="false"
                 color=#43458B
@@ -46,17 +46,18 @@
             </draggable>
 
             <ui-button type="button" @focus="trigger" @click="add" ref="add">
-              Add another option
+              {{$t('message.addAnotherOption')}}
             </ui-button>
           </div>
         </ui-panel>
 
-        <tip content="Don't forget to share the generated poll to Mixin."></tip>
+        <tip :content="$t('message.createTip')"></tip>
     </div>
   </ui-container>
 </template>
 
 <script>
+import i18n from './i18n'
 import axios from 'axios'
 import config from './config'
 import * as utils from './utils'
@@ -133,7 +134,7 @@ export default {
 
       if (this.options.some(o => !o.text.length)) {
         this.errors = utils.objectify(this.options.filter(o => !o.text.length).map(o => o.id), true)
-        this.$refs.alert.notify('error', 'You forgot to fill up some options.');
+        this.$refs.alert.notify('error', i18n.t('message.forgetOption'));
         return;
       }
 
@@ -146,11 +147,11 @@ export default {
         multi_answer: this.multiAnswer,
       })
         .then(res => {
-          this.$refs.alert.notify('success', 'You may now copy the generated poll to Mixin.');
+          this.$refs.alert.notify('success', i18n.t('message.createSuccess'));
           this.loading = false
           window.location.href = `${config.baseUrl}/poll/${res.data.id}`
         }, err => {
-          this.$refs.alert.notify('error', 'An error occured trying to generate a poll.');
+          this.$refs.alert.notify('error', i18n.t('message.createError'));
           this.loading = false
           if (err.response.status === 401) {
             window.location.href = err.response.data
@@ -167,6 +168,10 @@ export default {
             window.location.href = err.response.data
       }
     });
+
+    if (window.MixinContext) {
+      i18n.locale = JSON.parse(window.MixinContext.getContext()).locale
+    }
   },
   components: {
     CopyButton,

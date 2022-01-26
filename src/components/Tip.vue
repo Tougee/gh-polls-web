@@ -7,7 +7,7 @@
 
       <p class="text">
         {{ content }}
-        <button type="button" class="hide" @click="close">Close This Tip</button>
+        <button type="button" class="hide" @click="close">{{$t('message.closeTip')}}</button>
       </p>
     </div>
   </t-fade-to-left>

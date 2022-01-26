@@ -5,9 +5,9 @@
     <ui-alert ref="alert"></ui-alert>
 
     <div class="main-content">
-        <ui-panel title="Generated Poll" >
+        <ui-panel :title="$t('message.generatedPoll')" >
           <div slot="body">
-            <h4>{{ question }}<span v-if="isMulti"> (Multiple)</span></h4>
+            <h4>{{ question }}<span v-if="isMulti"> ({{$t('message.multiple')}})</span></h4>
             <div class="preview-box">
               <div v-for="o in options" :key="o.text">
                 <img :src="buildSrc(o.text)" alt="" @click="vote(o.text)" :id="o.text">
@@ -16,12 +16,13 @@
           </div>
         </ui-panel>
 
-        <tip content="Click right-top ··· to share this poll to Mixin."></tip>
+        <tip :content="$t('message.shareTip')"></tip>
     </div>
     </ui-container>
 </template>
 
 <script>
+import i18n from './i18n'
 import axios from 'axios'
 import config from './config'
 import Draggable from 'vuedraggable'
@@ -53,14 +54,14 @@ export default {
       axios.get(`/poll/${this.id}/${option}/vote`)
         .then(res => {
           if (res.data && res.data.error && res.data.error == 10000) {
-            this.$refs.alert.notify('error', 'You have already voted.')
+            this.$refs.alert.notify('error', i18n.t('message.alreadyVote'))
           } else {
             var img = document.getElementById(option)
             if (img) {
               img.src = `${config.api}/poll/${this.id}/${option}?${Date.now()}`;
-              this.$refs.alert.notify('success', 'You have voted successfully.');
+              this.$refs.alert.notify('success', i18n.t('message.voteSuccess'));
             } else {
-              this.$refs.alert.notify('error', 'Can not find voted option.');
+              this.$refs.alert.notify('error', i18n.t('message.optionNotFound'));
             }
           }
         })
@@ -87,6 +88,10 @@ export default {
       }
     });
 
+    if (window.MixinContext) {
+      i18n.locale = JSON.parse(window.MixinContext.getContext()).locale
+    }
+
     var href = window.location.href
     var questionMarkIndex = href.indexOf('?')
     var postIndex = questionMarkIndex != -1 ? questionMarkIndex : href.length
@@ -106,7 +111,7 @@ export default {
       this.multiAnswer = res.data.multi_answer
     }, err => {
       if (err.response.status === 404) {
-        this.$refs.alert.notify('error', 'Poll not found.');
+        this.$refs.alert.notify('error', i18n.t('message.pollNotFound'));
       } else if (err.response.status === 401) {
         window.location.href = err.response.data
       }
