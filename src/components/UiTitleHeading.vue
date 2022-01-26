@@ -1,6 +1,6 @@
 <template>
   <header class="title-heading">
-    <h1 class="title">Mixin Polls</h1>
+    <h1 class="title"><a href="/">Mixin Polls</a></h1>
     <nav class="nav">
       <div class="avatar-cropper">
         <img v-if="avatar" class="avatar" :src=avatar>
@@ -53,6 +53,10 @@
 
   .title-heading > .nav > .link:not(:last-child) {
     margin-right: 24px;
+  }
+
+  a {
+    text-decoration: none !important;
   }
 
   .avatar-cropper {

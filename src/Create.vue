@@ -5,18 +5,6 @@
     <ui-alert ref="alert"></ui-alert>
 
     <div class="main-content">
-      <div v-if="generated">
-        <ui-panel title="Generated Poll" >
-          <copy-button slot="action" :text="preview" entity="HTML"></copy-button>
-          <copy-button slot="action" :text="pollurl" preset="primary" entity="to Mixin"></copy-button>
-
-          <h4 v-if="question" slot="question">{{ question }}</h4>
-
-          <div slot="body" class="preview-box" v-html="preview"></div>
-        </ui-panel>
-      </div>
-
-      <div v-else>
         <ui-panel title="New poll">
           <ui-button slot="action" type="button"
             @click="generate"
@@ -27,18 +15,22 @@
             <span v-else>Generate</span>
           </ui-button>
 
-          <div slot="question">
-             <h4 >Question</h4>
-            <ui-input 
-            class="question-input"
-              @change="changeQuestion"
-              type="text"
-            placeholder="Ask a question (Optional)">
-            </ui-input>
-          </div>  
-
           <div slot="body">
-            <h4 class="options-title">Options</h4>
+              <h4 >Question</h4>
+              <ui-input 
+              class="question-input"
+                @change="changeQuestion"
+                type="text"
+              placeholder="Ask a question (Optional)">
+              </ui-input>
+
+            <div class="options-title">
+              <h4>Options<span v-if="isMulti"> (Multiple)</span></h4>
+              <toggle-button 
+                :value="false"
+                color=#43458B
+                @change="toggle"/>
+            </div>
 
             <draggable v-model="options" :options="{ group: 'options', handle: '.handle' }" class="inner">
               <poll-option v-for="(option, index) in options"
@@ -59,15 +51,13 @@
           </div>
         </ui-panel>
 
-        <tip></tip>
-      </div>
+        <tip content="Don't forget to share the generated poll to Mixin."></tip>
     </div>
   </ui-container>
 </template>
 
 <script>
 import axios from 'axios'
-import marked from 'marked'
 import config from './config'
 import * as utils from './utils'
 import Draggable from 'vuedraggable'
@@ -81,19 +71,24 @@ import UiTitleHeading from './components/UiTitleHeading'
 import Tip from './components/Tip'
 import PollOption from './components/PollOption'
 import CopyButton from './components/CopyButton'
+import { ToggleButton } from 'vue-js-toggle-button'
 
 export default {
-  name: 'app',
+  name: 'create',
   data() {
     return {
       question: '',
       options: [{ text: '', id: 0 }],
       loading: false,
-      generated: false,
+      multiAnswer: false,
       errors: {},
       counter: 0,
-      id: '',
       avatar_url: '',
+    }
+  },
+  computed: {
+    isMulti() {
+      return this.multiAnswer;
     }
   },
   methods: {
@@ -126,6 +121,11 @@ export default {
       }
     },
 
+    toggle({value, _}) {
+      console.log(value)
+      this.multiAnswer = value
+    },
+
     generate() {
       if (this.loading) {
         return;
@@ -142,17 +142,16 @@ export default {
 
       return axios.post('/poll', { 
         question: this.question,
-        options: this.options.map(o => o.text) 
+        options: this.options.map(o => o.text),
+        multi_answer: this.multiAnswer,
       })
         .then(res => {
           this.$refs.alert.notify('success', 'You may now copy the generated poll to Mixin.');
           this.loading = false
-          this.generated = true
-          this.id = res.data.id
+          window.location.href = `${config.baseUrl}/poll/${res.data.id}`
         }, err => {
           this.$refs.alert.notify('error', 'An error occured trying to generate a poll.');
           this.loading = false
-
           if (err.response.status === 401) {
             window.location.href = err.response.data
           }
@@ -169,23 +168,6 @@ export default {
       }
     });
   },
-  computed: {
-    markdown() {
-      return this.options.map(option => {
-        option = encodeURIComponent(option.text);
-        const image = `![](${config.api}/poll/${this.id}/${option})`;
-        return `[${image}](${config.api}/poll/${this.id}/${option}/vote)`
-      }).join('\n')
-    },
-
-    pollurl() {
-      return `${config.api}/poll/${this.id}`
-    },
-
-    preview() {
-      return marked(this.markdown);
-    },
-  },
   components: {
     CopyButton,
     Draggable,
@@ -197,73 +179,74 @@ export default {
     UiPanel,
     UiButton,
     UiLoader,
-    UiTitleHeading
+    UiTitleHeading,
+    ToggleButton
   }
 }
 </script>
 
 <style>
 :root {
-  --color-white: #fff;
-  --color-black: #000;
-  --color-light-silver: #f9fafb;
-  --color-dark-silver: #8898aa;
-  --color-silver: #d9e3ed;
-  --color-gray: #B4B4B4;
-  --color-dark-gray: #434343;
-  --color-red: #FC6D6B;
-  --color-info: #1E6EF9;
-  --color-green: #01dc87;
-  --color-lavender: #43458B;
-  --color-light-lavender: #6466bf;
-  --drop-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-  --drop-shadow-lower: 0px 4px 4px rgba(0,0,0,0.1);
-  --border-radius: 4px;
-  --form-size: 40px;
-  --font-size: 14px;
-  --font-size-small: 10px;
-  --fa-size-regular: 20px;
-  --font-smallee: 12px;
-  --font-family: "Source Sans Pro", San Francisco, -apple-system, BlinkMacSystemFont, ".SFSNText-Regular", Segoe UI, Ubuntu, Helvetica, sans-serif;
-  --font-montserrat: "Montserrat", San Francisco, -apple-system, BlinkMacSystemFont, ".SFSNText-Regular", Segoe UI, Ubuntu, Helvetica, sans-serif;
-}
+    --color-white: #fff;
+    --color-black: #000;
+    --color-light-silver: #f9fafb;
+    --color-dark-silver: #8898aa;
+    --color-silver: #d9e3ed;
+    --color-gray: #B4B4B4;
+    --color-dark-gray: #434343;
+    --color-red: #FC6D6B;
+    --color-info: #1E6EF9;
+    --color-green: #01dc87;
+    --color-lavender: #43458B;
+    --color-light-lavender: #6466bf;
+    --drop-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+    --drop-shadow-lower: 0px 4px 4px rgba(0,0,0,0.1);
+    --border-radius: 4px;
+    --form-size: 40px;
+    --font-size: 14px;
+    --font-size-small: 10px;
+    --fa-size-regular: 20px;
+    --font-smallee: 12px;
+    --font-family: "Source Sans Pro", San Francisco, -apple-system, BlinkMacSystemFont, ".SFSNText-Regular", Segoe UI, Ubuntu, Helvetica, sans-serif;
+    --font-montserrat: "Montserrat", San Francisco, -apple-system, BlinkMacSystemFont, ".SFSNText-Regular", Segoe UI, Ubuntu, Helvetica, sans-serif;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    color: var(--color-black);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    background: var(--color-light-silver);
+  }
+  
+  .preview-box {
+    text-align: center;
+  }
+  
+  .main-content {
+    margin-bottom: 160px;
+  }
 
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  color: var(--color-black);
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  background: var(--color-light-silver);
-}
-
-.preview-box {
-  text-align: center;
-}
-
-.main-content {
-  margin-bottom: 160px;
-}
-
-.options-title {
-  margin-top: 0;
-}
-
-.question-input {
-  margin-bottom: 16px;
-}
-
-/**
- * https://github.com/Justineo/vue-awesome#styling
- */
-.fa-icon {
-  width: auto;
-  height: 1em; /* or any other relative font sizes */
-
-  /* You would have to include the following two lines to make this work in Safari */
-  max-width: 100%;
-  max-height: 100%;
-}
+  .options-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 16px;
+    padding-top: 0px;
+  }
+  
+  /**
+   * https://github.com/Justineo/vue-awesome#styling
+   */
+  .fa-icon {
+    width: auto;
+    height: 1em; /* or any other relative font sizes */
+  
+    /* You would have to include the following two lines to make this work in Safari */
+    max-width: 100%;
+    max-height: 100%;
+  }
 </style>

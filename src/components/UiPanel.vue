@@ -8,10 +8,6 @@
       </div>
     </header>
 
-    <div class="question">
-      <slot name="question"></slot>
-    </div>
-
     <div class="body">
       <slot name="body"></slot>
     </div>
@@ -27,17 +23,10 @@
 
 <style scoped>
   .panel > .heading,
-  .panel > .question,
   .panel > .body {
     padding: 16px;
     background: var(--color-white);
     border: 1px solid var(--color-silver);
-  }
-
-  .panel > .question {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    border-bottom: 0;
   }
 
   .panel > .heading {
@@ -65,5 +54,6 @@
   .panel > .body {
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
+    padding-top: 0px;
   }
 </style>

@@ -6,7 +6,7 @@
       </div>
 
       <p class="text">
-        Don't forget to copy the generated poll link to Mixin.
+        {{ content }}
         <button type="button" class="hide" @click="close">Close This Tip</button>
       </p>
     </div>
@@ -18,9 +18,10 @@
 
   export default {
     name: 'tip',
+    props: ['content'],
     data() {
       return {
-        show: true
+        show: true,
       }
     },
     methods: {
