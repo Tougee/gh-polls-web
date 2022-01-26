@@ -1,6 +1,8 @@
-# gh-polls-web
+# mixin-polls-web
 
-> Generate polls for GitHub issues. Web front-end for [GitHub Polls](https://github.com/tj/gh-polls).
+> Generate polls for Mixin users. Web front-end for [Mixin Polls](https://github.com/tougee/mixin-polls), fork from [gh-polls-web](https://github.com/srph/gh-polls-web)
+
+Searching for `7000104378` in [Mixin Messenger](https://mixin.one/messenger) and start using.
 
 ![Preview](preview.png)
 
@@ -10,7 +12,7 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8082
 npm run dev
 
 # build for production with minification
