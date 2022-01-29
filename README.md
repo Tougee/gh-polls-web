@@ -4,7 +4,9 @@
 
 Searching for `7000104378` in [Mixin Messenger](https://mixin.one/messenger) and start using.
 
-![Preview](preview.png)
+<p align="center">
+    <img src="preview.png" width="50%" height="50%">
+</p>
 
 ## Build Setup
 
