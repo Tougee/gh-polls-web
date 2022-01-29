@@ -101,7 +101,7 @@ export default {
       },
       (err) => {
         if (err.response.status === 401) {
-          window.location.href = err.response.data;
+          window.location.href = `${err.response.data}&return_to=${window.location.href}`;
         }
       }
     );
@@ -133,7 +133,7 @@ export default {
         if (err.response.status === 404) {
           this.$refs.alert.notify("error", i18n.t("message.pollNotFound"));
         } else if (err.response.status === 401) {
-          window.location.href = err.response.data;
+          window.location.href = `${err.response.data}&return_to=${window.location.href}`;
         }
       }
     );
