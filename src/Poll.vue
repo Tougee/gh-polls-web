@@ -5,7 +5,7 @@
     <ui-alert ref="alert"></ui-alert>
 
     <div class="main-content">
-      <ui-panel :title="$t('message.generatedPoll')">
+      <ui-panel :title="title">
         <div slot="body">
           <h4>
             {{ question
@@ -32,6 +32,7 @@
 
 <script>
 import i18n from "./i18n";
+import "dayjs/locale/zh";
 import axios from "axios";
 import config from "./config";
 import Draggable from "vuedraggable";
@@ -45,6 +46,10 @@ import Tip from "./components/Tip";
 import PollOption from "./components/PollOption";
 import CopyButton from "./components/CopyButton";
 
+var dayjs = require("dayjs");
+var relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
+
 export default {
   name: "poll",
   data() {
@@ -52,6 +57,8 @@ export default {
       question: "",
       options: [{ text: "" }],
       multiAnswer: false,
+      dueDate: "",
+      title: i18n.t("message.activePoll"),
       id: "",
       avatar_url: "",
     };
@@ -65,12 +72,16 @@ export default {
         .then((res) => {
           if (res.data && res.data.error && res.data.error == 10000) {
             this.$refs.alert.notify("error", i18n.t("message.alreadyVote"));
+          } else if (res.data && res.data.error && res.data.error == 10001) {
+            this.$refs.alert.notify("error", i18n.t("message.pollEnded"));
           } else {
             var imgs = document.getElementsByClassName("option-img");
             if (imgs) {
               Array.from(imgs).map((img) => {
-                img.src = `${config.api}/poll/${this.id}/${img.id}?${Date.now()}`;
-              })
+                img.src = `${config.api}/poll/${this.id}/${
+                  img.id
+                }?${Date.now()}`;
+              });
               this.$refs.alert.notify("success", i18n.t("message.voteSuccess"));
             } else {
               this.$refs.alert.notify(
@@ -107,7 +118,9 @@ export default {
     );
 
     if (window.MixinContext) {
-      i18n.locale = JSON.parse(window.MixinContext.getContext()).locale;
+      var locale = JSON.parse(window.MixinContext.getContext()).locale;
+      i18n.locale = locale;
+      dayjs.locale(locale);
     }
 
     var href = window.location.href;
@@ -128,6 +141,19 @@ export default {
           return { text: option };
         });
         this.multiAnswer = res.data.multi_answer;
+        this.dueDate = res.data.due_date;
+
+        var dueDate = new Date(this.dueDate);
+        var now = new Date();
+        if (dueDate <= now) {
+          this.title = i18n.t("message.pollEnded");
+        } else {
+          var toNow = dayjs(dueDate).toNow(true);
+          this.title = `${i18n.t("message.activePoll")} • ${i18n.t(
+            "message.left",
+            { date: toNow }
+          )}`;
+        }
       },
       (err) => {
         if (err.response.status === 404) {

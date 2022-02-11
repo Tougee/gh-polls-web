@@ -52,8 +52,6 @@ export default {
 }
 
 .panel > .body {
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
   padding-top: 0px;
 }
 </style>

@@ -61,6 +61,8 @@
         </div>
       </ui-panel>
 
+      <setting @dateChange="dateChange" />
+
       <tip :content="$t('message.createTip')"></tip>
     </div>
   </ui-container>
@@ -82,6 +84,7 @@ import UiTitleHeading from "./components/UiTitleHeading";
 import Tip from "./components/Tip";
 import PollOption from "./components/PollOption";
 import CopyButton from "./components/CopyButton";
+import Setting from "./components/Setting";
 import { ToggleButton } from "vue-js-toggle-button";
 
 export default {
@@ -90,6 +93,7 @@ export default {
     return {
       question: "",
       options: [{ text: "", id: 0 }],
+      dueDate: "",
       loading: false,
       multiAnswer: false,
       errors: {},
@@ -122,6 +126,10 @@ export default {
       this.options[index].text = value;
     },
 
+    dateChange(date) {
+      this.dueDate = date;
+    },
+
     changeQuestion(evt) {
       this.question = evt.target.value;
     },
@@ -151,6 +159,11 @@ export default {
         return;
       }
 
+      if (!this.dueDate) {
+        this.$refs.alert.notify("error", i18n.t("message.forgetDueDate"));
+        return;
+      }
+
       this.errors = {};
       this.loading = true;
 
@@ -159,6 +172,7 @@ export default {
           question: this.question,
           options: this.options.map((o) => o.text),
           multi_answer: this.multiAnswer,
+          due_date: this.dueDate,
         })
         .then(
           (res) => {
@@ -205,6 +219,7 @@ export default {
     UiButton,
     UiLoader,
     UiTitleHeading,
+    Setting,
     ToggleButton,
   },
 };
@@ -278,5 +293,20 @@ body {
   /* You would have to include the following two lines to make this work in Safari */
   max-width: 100%;
   max-height: 100%;
+}
+
+.mx-calendar-content .cell.active {
+  background-color: var(--color-light-lavender);
+}
+
+.mx-input:hover,
+.mx-input:focus {
+  border-color: var(--color-light-lavender);
+}
+.mx-btn:hover,
+.mx-btn:focus,
+.mx-table-date .today,
+.mx-time-column .mx-time-item.active {
+  color: var(--color-light-lavender);
 }
 </style>
