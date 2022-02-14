@@ -70,6 +70,36 @@ export default new VueI18n({
         endedPoll: '已结束的投票',
         left: '剩下 {date}',
       }
+    },
+    'ja': {
+      message: {
+        generate: '作成',
+        newPoll: '投票を作成する',
+        multiple: '複数選択可',
+        activePoll: '投票中',
+        question: '質問',
+        askQuestion: '質問する（任意）',
+        options: 'オプション',
+        enterOptions: '入力オプション（例：BTC、XIN、ETHなど）',
+        addAnotherOption: '別のオプションを追加する',
+        createTip: '作成した投票をMixinに共有することを忘れないでください。',
+        closeTip: 'このヒントを閉じる',
+        shareTip: '右上をクリック···Mixinに投票を共有する。',
+        alreadyVote: 'すでに投票済みです。',
+        forgetOption: 'オプションの追加を忘れています。',
+        createSuccess: '作成した投票をMixinに共有できるようになりました。',
+        createError: '投票の作成中にエラーが発生しました。',
+        pollNotFound: '投票が存在しません。',
+        voteSuccess: '投票が成功しました。',
+        optionNotFound: '投票のオプションが見つかりません。',
+        settings: '設定',
+        dueDate: '期限',
+        selectDatetime: '日付を選択',
+        forgetDueDate: '期限を設定することを忘れています',
+        pollEnded: '投票は終了しました。',
+        endedPoll: '投票終了',
+        left: '残り{date}',
+      }
     }
   }
 })
