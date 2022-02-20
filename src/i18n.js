@@ -13,6 +13,7 @@ export default new VueI18n({
   messages: {
     'en-US': {
       message: {
+        poll: 'Poll',
         generate: 'Generate',
         newPoll: 'New Poll',
         multiple: 'Multiple',
@@ -43,6 +44,7 @@ export default new VueI18n({
     },
     'zh': {
       message: {
+        poll: "投票",
         generate: '创建',
         newPoll: '创建投票',
         multiple: '多选',
@@ -73,6 +75,7 @@ export default new VueI18n({
     },
     'ja': {
       message: {
+        poll: '投票',
         generate: '作成',
         newPoll: '投票を作成する',
         multiple: '複数選択可',

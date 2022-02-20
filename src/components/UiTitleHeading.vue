@@ -1,6 +1,6 @@
 <template>
   <header class="title-heading">
-    <h1 class="title"><a href="/">Mixin Polls</a></h1>
+    <h1 class="title"><a href="/">{{ $t('message.poll') }}</a></h1>
     <nav class="nav">
       <div class="avatar-cropper">
         <img v-if="avatar" class="avatar" :src=avatar>
