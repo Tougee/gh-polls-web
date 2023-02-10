@@ -1,4 +1,4 @@
 export default {
-  api: 'https://mixinpoll.touge.fun',
+  api: 'https://poll.touge.fun',
   baseUrl: "https://web.mixinpoll.touge.fun"
 }
